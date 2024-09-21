@@ -7,7 +7,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
-@RequestMapping("/pagamentos")
+@RequestMapping("strategy/pagamentos")
 public class EfetuarCompraController {
 
     private final EfetuarCompraService efetuarCompraService;

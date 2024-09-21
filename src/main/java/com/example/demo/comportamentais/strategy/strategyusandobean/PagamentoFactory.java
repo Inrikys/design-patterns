@@ -32,7 +32,9 @@ public class PagamentoFactory {
             }
         }
 
-        context.getBeanFactory().registerSingleton(beanClass.getName(), bean);
+//        context.getBean(beanClass.getName());
+//
+//        context.getBeanFactory().registerSingleton(beanClass.getName(), bean);
         return bean;
     }
 
