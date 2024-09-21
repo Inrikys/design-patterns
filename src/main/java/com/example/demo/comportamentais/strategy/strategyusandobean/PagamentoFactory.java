@@ -14,27 +14,27 @@ public class PagamentoFactory {
 
     public PagamentoStrategy criarBeanPagamento(String tipoPagamento) {
 
-        PagamentoStrategy bean = null;
-        Class<?> beanClass = null;
+        Class<? extends PagamentoStrategy> beanClass = getPagamentoClass(tipoPagamento);
+        return getOrCreateBean(beanClass);
+    }
 
-        switch (tipoPagamento.toLowerCase()) {
-            case "pix" -> {
-                bean = context.getBeanFactory().createBean(PagamentoPix.class);
-                beanClass = PagamentoPix.class;
-            }
-            case "debito" -> {
-                bean = context.getBeanFactory().createBean(PagamentoDebito.class);
-                beanClass = PagamentoDebito.class;
-            }
-            default -> {
-                bean = context.getBeanFactory().createBean(PagamentoCredito.class);
-                beanClass = PagamentoCredito.class;
-            }
+    private Class<? extends PagamentoStrategy> getPagamentoClass(String tipoPagamento) {
+        return switch (tipoPagamento.toLowerCase()) {
+            case "pix" -> PagamentoPix.class;
+            case "debito" -> PagamentoDebito.class;
+            default -> PagamentoCredito.class;
+        };
+    }
+
+    private PagamentoStrategy getOrCreateBean(Class<? extends PagamentoStrategy> beanClass) {
+        String beanName = beanClass.getName();
+
+        if (context.getBeanFactory().containsSingleton(beanName)) {
+            return (PagamentoStrategy) context.getBean(beanName);
         }
 
-//        context.getBean(beanClass.getName());
-//
-//        context.getBeanFactory().registerSingleton(beanClass.getName(), bean);
+        PagamentoStrategy bean = context.getBeanFactory().createBean(beanClass);
+        context.getBeanFactory().registerSingleton(beanName, bean);
         return bean;
     }
 
